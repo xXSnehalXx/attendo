@@ -22,7 +22,7 @@ export default class DialogList extends Component {
       this.state.time = new Animated.Value(0);
       this.state.opacity = this.state.time.interpolate({
           inputRange:[0,100],
-          outputRange:[1,1],
+          outputRange:[0,1],
           extrapolate:'clamp'
       });
   }
@@ -51,12 +51,14 @@ export default class DialogList extends Component {
                 <TouchableHighlight onPress = {this.cancelAnimation} underlayColor={"white"} activeOpacity={1}>
                     <View style={styles.cancelButton}><Text style={styles.xIcon}>X</Text></View>
                 </TouchableHighlight>
-                <View style={styles.dialogTitle}></View>
+                <View style={styles.dialogTitle}><Text style={styles.contentText}>{content.header}</Text></View>
             </View>
             <View style={styles.dialogContent}>
                 <FlatList
                 data={content.data}
-                renderItem={({item}) => <View style={styles.eachContent}></View> }
+                renderItem={({item}) => <View style={styles.eachContent}><Text style={styles.contentText}>{item}</Text></View> }
+                keyExtractor={(item, index) => index.toString()}
+
                 />
             </View>
         </Animated.View>
@@ -83,39 +85,34 @@ const styles = StyleSheet.create({
       backgroundColor:'white',
       position:'absolute',
       bottom:40,
+      borderColor:'grey'
   },
-  animButton:{
-      height:30,
-      width:100,
-      backgroundColor:'red',
-      justifyContent:'center',
-      alignItems:'center',
-      marginTop:40
-  },
-  animText:{
-    fontSize:17
-    },
     dialogHeader:{
-        height:60,
-        backgroundColor:'pink',
-        flexDirection:'row'
+        height:55,
+        // backgroundColor:'pink',
+        flexDirection:'row',
+        alignItems:'center',
+        borderBottomWidth:0.5
     },
     dialogContent:{
         flex:1,
-        backgroundColor:'red'
+        // backgroundColor:'red',
     },
     dialogTitle:{
         flex:1,
-        backgroundColor:'yellow',
-        margin:5
+        // backgroundColor:'yellow',
+        margin:5,
+        justifyContent:'center',
+        paddingLeft:10
     },
     cancelButton:{
         height:50,
         width:50,
-        backgroundColor:'red',
-        margin:5,
+        // backgroundColor:'red',
+        // margin:5,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        marginLeft:2
     },
     xIcon:{
         fontSize:30,
@@ -123,8 +120,26 @@ const styles = StyleSheet.create({
     },
     eachContent:{
         height:50,
-        backgroundColor:'yellow',
-        margin:5,
-        borderWidth:0.5
-    }
+        // backgroundColor:'yellow',
+        // margin:2,
+        // borderTopWidth:0.5,
+        // borderBottomWidth:0.5,
+        justifyContent:'center',
+        paddingLeft:20
+    },
+    contentText:{
+        fontSize:20,
+        color:'gray'
+    },
+    animButton:{
+      height:30,
+      width:80,
+      // backgroundColor:'red',
+      justifyContent:'center',
+      alignItems:'center',
+      marginTop:40
+    },
+    animText:{
+    fontSize:17
+    },
 });
