@@ -15,20 +15,25 @@ const content = {
     header:"Choose",
     data:['DWDM','CO','OS','M2','DWDM Lab']
 };
-export default class DialogList extends Component {
+export default class DialogListTest extends Component {
     constructor(props) {
       super(props);
       this.state={};
       this.state.time = new Animated.Value(0);
       this.state.opacity = this.state.time.interpolate({
+          inputRange:[100,200],
+          outputRange:[1,1],
+          extrapolate:'clamp'
+      });
+      this.state.bottom = this.state.time.interpolate({
           inputRange:[0,100],
-          outputRange:[0,1],
+          outputRange:[-250,40],
           extrapolate:'clamp'
       });
   }
   animateButtonPressed = () => {
           Animated.timing(this.state.time,{
-              toValue:100,
+              toValue:200,
               duration:100,
           }).start();
   }
@@ -40,37 +45,36 @@ export default class DialogList extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <Animated.View style={[styles.centerBox,
+      <View style={dialogStyles.container}>
+        <Animated.View style={[dialogStyles.centerBox,
             {
-                opacity:this.state.opacity
+                opacity:this.state.opacity,
+                bottom:this.state.bottom
             }
-
         ]}>
-            <View style={styles.dialogHeader}>
+          <View style={dialogStyles.dialogHeader}>
                 <TouchableHighlight onPress = {this.cancelAnimation} underlayColor={"white"} activeOpacity={1}>
-                    <View style={styles.cancelButton}><Text style={styles.xIcon}>X</Text></View>
+                    <View style={dialogStyles.cancelButton}><Text style={dialogStyles.xIcon}>X</Text></View>
                 </TouchableHighlight>
-                <View style={styles.dialogTitle}><Text style={styles.contentText}>{content.header}</Text></View>
+                <View style={dialogStyles.dialogTitle}><Text style={dialogStyles.contentText}>{content.header}</Text></View>
             </View>
-            <View style={styles.dialogContent}>
+            <View style={dialogStyles.dialogContent}>
                 <FlatList
                 data={content.data}
-                renderItem={({item}) => <View style={styles.eachContent}><Text style={styles.contentText}>{item}</Text></View> }
+                renderItem={({item}) => <View style={dialogStyles.eachContent}><Text style={dialogStyles.contentText}>{item}</Text></View> }
                 keyExtractor={(item, index) => index.toString()}
-
                 />
             </View>
         </Animated.View>
         <TouchableHighlight onPress = {this.animateButtonPressed} underlayColor={"lightblue"} activeOpacity={0.5}>
-            <View style={styles.animButton}><Text style={styles.animText}>Animate</Text></View>
+            <View style={dialogStyles.animButton}><Text style={dialogStyles.animText}>Animate</Text></View>
         </TouchableHighlight>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const dialogStyles = StyleSheet.create({
     container: {
       paddingTop:Platform.OS=="ios"?22:0,
       flex: 1,
@@ -84,7 +88,6 @@ const styles = StyleSheet.create({
       borderWidth:1,
       backgroundColor:'white',
       position:'absolute',
-      bottom:40,
       borderColor:'grey'
   },
     dialogHeader:{
