@@ -1,5 +1,4 @@
 /* @flow */
-
 import React, { Component } from 'react';
 import {
   View,
@@ -8,9 +7,11 @@ import {
   Platform,
   Animated,
   TouchableHighlight,
-  FlatList
-
+  TouchableOpacity,
+  FlatList,
+  PanResponder
 } from 'react-native';
+import DialogListBox from './components/dialogListBox.js';
 const content = {
     header:"Choose",
     data:['DWDM','CO','OS','M2','DWDM Lab']
@@ -19,56 +20,64 @@ export default class DialogListTest extends Component {
     constructor(props) {
       super(props);
       this.state={};
-      this.state.time = new Animated.Value(0);
-      this.state.opacity = this.state.time.interpolate({
-          inputRange:[100,200],
-          outputRange:[1,1],
-          extrapolate:'clamp'
-      });
-      this.state.bottom = this.state.time.interpolate({
-          inputRange:[0,100],
-          outputRange:[-250,40],
-          extrapolate:'clamp'
-      });
+      // this.state.time = new Animated.Value(0);
+      // this.state.opacity = this.state.time.interpolate({
+      //     inputRange:[100,200],
+      //     outputRange:[0,1],
+      //     extrapolate:'clamp'
+      // });
+      // this.state.marginTop = this.state.time.interpolate({
+      //     inputRange:[0,100],
+      //     outputRange:[3000,0],
+      //     extrapolate:'clamp'
+      // });
+
+      this._objc = null;
+
   }
-  animateButtonPressed = () => {
-          Animated.timing(this.state.time,{
-              toValue:200,
-              duration:100,
-          }).start();
-  }
-  cancelAnimation=() => {
-      Animated.timing(this.state.time,{
-          toValue:0,
-          duration:100,
-      }).start();
+  // animateButtonPressed = () => {
+  //         Animated.timing(this.state.time,{
+  //             toValue:200,
+  //             duration:200,
+  //         }).start();
+  // }
+  // cancelAnimation=() => {
+  //     Animated.timing(this.state.time,{
+  //         toValue:0,
+  //         duration:200,
+  //     }).start();
+  // }
+  // <Animated.View style={[dialogStyles.dialogListBackground,{
+  //     marginTop:this.state.marginTop,
+  //     opacity:this.state.opacity
+  // }
+  // ]} pointerEvent={'box-none'} zIndex={1}>
+  //     <View style={dialogStyles.centerBox}>
+  //         <View style={dialogStyles.dialogHeader}>
+  //               <TouchableHighlight onPress = {this.cancelAnimation} underlayColor={"transparent"} activeOpacity={1}>
+  //                   <View style={dialogStyles.cancelButton}><Text style={dialogStyles.xIcon}>X</Text></View>
+  //               </TouchableHighlight>
+  //               <View style={dialogStyles.dialogTitle}><Text style={dialogStyles.contentText}>{content.header}</Text></View>
+  //           </View>
+  //           <View style={dialogStyles.dialogContent}>
+  //               <FlatList
+  //               data={content.data}
+  //               renderItem={({item}) => <View style={dialogStyles.eachContent}><Text style={dialogStyles.contentText}>{item}</Text></View> }
+  //               keyExtractor={(item, index) => index.toString()}
+  //               />
+  //           </View>
+  //     </View>
+  // </Animated.View>
+  testButton=() => {
+      this._objc.animateButtonPressed();
   }
   render() {
     return (
-      <View style={dialogStyles.container}>
-        <Animated.View style={[dialogStyles.centerBox,
-            {
-                opacity:this.state.opacity,
-                bottom:this.state.bottom
-            }
-        ]}>
-          <View style={dialogStyles.dialogHeader}>
-                <TouchableHighlight onPress = {this.cancelAnimation} underlayColor={"white"} activeOpacity={1}>
-                    <View style={dialogStyles.cancelButton}><Text style={dialogStyles.xIcon}>X</Text></View>
-                </TouchableHighlight>
-                <View style={dialogStyles.dialogTitle}><Text style={dialogStyles.contentText}>{content.header}</Text></View>
-            </View>
-            <View style={dialogStyles.dialogContent}>
-                <FlatList
-                data={content.data}
-                renderItem={({item}) => <View style={dialogStyles.eachContent}><Text style={dialogStyles.contentText}>{item}</Text></View> }
-                keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
-        </Animated.View>
-        <TouchableHighlight onPress = {this.animateButtonPressed} underlayColor={"lightblue"} activeOpacity={0.5}>
+      <View style={dialogStyles.container} zIndex={0} >
+        <DialogListBox bullRef = {(ref) => this._objc = ref}/>
+        <TouchableOpacity onPress = {this.testButton} activeOpacity={0.5}>
             <View style={dialogStyles.animButton}><Text style={dialogStyles.animText}>Animate</Text></View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -76,9 +85,17 @@ export default class DialogListTest extends Component {
 
 const dialogStyles = StyleSheet.create({
     container: {
-      paddingTop:Platform.OS=="ios"?22:0,
+      marginTop:Platform.OS=="ios"?22:0,
       flex: 1,
       backgroundColor:'lightblue',
+      alignItems:'center'
+  },
+  dialogListBackground:{
+      height:'100%',
+      width:'100%',
+      backgroundColor:'rgba(52, 52, 52,0.8)',
+      position:'absolute',
+      justifyContent:'center',
       alignItems:'center'
   },
   centerBox:{
@@ -87,8 +104,7 @@ const dialogStyles = StyleSheet.create({
       borderRadius:5,
       borderWidth:1,
       backgroundColor:'white',
-      position:'absolute',
-      borderColor:'grey'
+      borderColor:'grey',
   },
     dialogHeader:{
         height:55,

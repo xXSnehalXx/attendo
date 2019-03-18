@@ -12,6 +12,7 @@ import {
   FlatList,
   Alert
 } from 'react-native';
+import DialogListBox from './components/dialogListBox.js';
 const content = {
     first:['Theory','Lab'],
     second:{
@@ -28,39 +29,29 @@ export default class CrHome extends Component {
         super(props);
         this.child={};
         this.state={
-            language:'',
-            header:"Choose",
-            data:['DWDM','CO','OS','M2','DWDM Lab'],
+            sub1:"",
+            sub2:"",
+            sub3:""
         };
-        this.state.time = new Animated.Value(0);
-        this.state.opacity = this.state.time.interpolate({
-            inputRange:[100,200],
-            outputRange:[0,1],
-            extrapolate:'clamp'
-        });
-        this.state.bottom = this.state.time.interpolate({
-            inputRange:[0,100],
-            outputRange:[-250,40],
-            extrapolate:'clamp'
+        this._objc = null;
+
+    }
+    setSubjectForSubBox=(boxNum,subText) => {
+        this.setState({
+           ['sub'+boxNum]:subText
         });
     }
-    animateButtonPressed = (value) => {
-            v = JSON.stringify(value)
-            Alert.alert(v);
-            Animated.timing(this.state.time,{
-                toValue:200,
-                duration:100,
-            }).start();
-    }
-    cancelAnimation=() => {
-        Animated.timing(this.state.time,{
-            toValue:0,
-            duration:100,
-        }).start();
+    subBoxesPressed = (boxNum) => {
+        var data = {
+            dTitle:'Choose',
+            dData:['Theory','Lab']
+        };
+        this._objc.animateButtonPressed(data,boxNum);
     }
   render() {
     return (
       <View style={styles.container}>
+      <DialogListBox bullRef = {(ref) => this._objc = ref} setSub = {this.setSubjectForSubBox} />
         <View style={styles.b}>
             <View style={styles.b1}>
                 <View style={styles.b1b}>
@@ -84,45 +75,32 @@ export default class CrHome extends Component {
                     </View>
                     <View style={[styles.b2b1,{flex:3}]} >
                         <Text style={styles.periodText}>Select subject</Text>
-                        <TouchableOpacity onPress = {()=>this.animateButtonPressed(1)} activeOpacity={1}>
+                        <TouchableOpacity onPress = {()=>this.subBoxesPressed(1)} activeOpacity={1}>
                             <View style={styles.subjectBox}>
+                                <Text style={styles.t1}>{this.state.sub1}</Text>
                             </View>
                         </TouchableOpacity>
                         <Text style={styles.arrow}>↓</Text>
-                        <TouchableOpacity onPress = {()=>this.animateButtonPressed(2)} activeOpacity={1}>
-                            <View style={styles.subjectBox}></View>
+                        <TouchableOpacity onPress = {()=>this.subBoxesPressed(2)} activeOpacity={1}>
+                            <View style={styles.subjectBox}>
+                                <Text style={styles.t1}>{this.state.sub2}</Text>
+                            </View>
                         </TouchableOpacity>
                         <Text style={styles.arrow}>↓</Text>
-                        <TouchableOpacity onPress = {()=>this.animateButtonPressed(3)} activeOpacity={0.5}>
-                            <View style={styles.subjectBox}></View>
+                        <TouchableOpacity onPress = {()=>this.subBoxesPressed(3)} activeOpacity={1}>
+                            <View style={styles.subjectBox}>
+                                <Text style={styles.t1}>{this.state.sub3}</Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
 
                 </View>
             </View>
-            <View style={styles.b2}>
+            <View style={styles.b2} >
+            <TouchableOpacity onPress = {()=>alert('nextPressed')} activeOpacity={1}>
                     <Text style={styles.nextButton}>Next</Text>
+            </TouchableOpacity>
             </View>
-            <Animated.View style={[dialogStyles.centerBox,
-                {
-                    opacity:this.state.opacity,
-                    bottom:this.state.bottom
-                }
-            ]}>
-                <View style={dialogStyles.dialogHeader}>
-                    <TouchableOpacity onPress = {this.cancelAnimation}  activeOpacity={1}>
-                        <View style={dialogStyles.cancelButton}><Text style={dialogStyles.xIcon}>X</Text></View>
-                    </TouchableOpacity>
-                    <View style={dialogStyles.dialogTitle}><Text style={dialogStyles.contentText}>{content.header}</Text></View>
-                </View>
-                <View style={dialogStyles.dialogContent}>
-                    <FlatList
-                    data={content.data}
-                    renderItem={({item}) => <View style={dialogStyles.eachContent}><Text style={dialogStyles.contentText}>{item}</Text></View> }
-                    keyExtractor={(item, index) => index.toString()}
-                    />
-                </View>
-            </Animated.View>
         </View>
       </View>
     );
@@ -132,9 +110,10 @@ export default class CrHome extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop:Platform.OS=="ios"?22:0,
+      marginTop:Platform.OS=="ios"?22:0,
       flex: 1,
       // backgroundColor: '#C7DEED',
+      zIndex:1
   },
     b:{
         flex:1,
@@ -197,17 +176,19 @@ const styles = StyleSheet.create({
     },
     b2b1:{
         margin:2,
-        backgroundColor:'pink',
+        // backgroundColor:'pink',
         flex:1,
-        alignItems:'flex-end'
+        alignItems:'flex-start'
         // justifyContent:'space-between'
     },
     subjectBox:{
         height:37,
-        width:100,
+        width:110,
         backgroundColor:'white',
-        borderRadius:5,
-        borderWidth:0.8
+        borderRadius:8,
+        borderWidth:0.8,
+        justifyContent:'center',
+        alignItems:'center'
     },
     arrow:{
         left:40,
@@ -217,77 +198,4 @@ const styles = StyleSheet.create({
         color:'black'
     },
     //below is for the diallogLISt
-});
-const dialogStyles = StyleSheet.create({
-    container: {
-      paddingTop:Platform.OS=="ios"?22:0,
-      flex: 1,
-      backgroundColor:'lightblue',
-      alignItems:'center',
-  },
-  centerBox:{
-      height:250,
-      width:300,
-      borderRadius:5,
-      borderWidth:1,
-      backgroundColor:'white',
-      position:'absolute',
-      borderColor:'grey',
-      alignSelf:'center'
-  },
-    dialogHeader:{
-        height:55,
-        // backgroundColor:'pink',
-        flexDirection:'row',
-        alignItems:'center',
-        borderBottomWidth:0.5
-    },
-    dialogContent:{
-        flex:1,
-        // backgroundColor:'red',
-    },
-    dialogTitle:{
-        flex:1,
-        // backgroundColor:'yellow',
-        margin:5,
-        justifyContent:'center',
-        paddingLeft:10
-    },
-    cancelButton:{
-        height:50,
-        width:50,
-        // backgroundColor:'red',
-        // margin:5,
-        justifyContent:'center',
-        alignItems:'center',
-        marginLeft:2
-    },
-    xIcon:{
-        fontSize:30,
-        color:'gray'
-    },
-    eachContent:{
-        height:50,
-        // backgroundColor:'yellow',
-        // margin:2,
-        // borderTopWidth:0.5,
-        // borderBottomWidth:0.5,
-        justifyContent:'center',
-        paddingLeft:20
-    },
-    contentText:{
-        fontSize:20,
-        color:'gray'
-    },
-    animButton:{
-      height:30,
-      width:80,
-      // backgroundColor:'red',
-      justifyContent:'center',
-      alignItems:'center',
-      marginTop:40
-    },
-    animText:{
-    fontSize:17
-    },
 });

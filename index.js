@@ -9,4 +9,4 @@ import CrHome from './src/crHomeView.js'
 import DialogListTest from './src/dialogList.js'
 import {name as appName} from './app.json';
 
-AppRegistry.registerComponent(appName, () => DialogListTest);
+AppRegistry.registerComponent(appName, () => CrHome);
