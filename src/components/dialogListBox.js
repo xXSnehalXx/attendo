@@ -15,7 +15,7 @@ import {
 //SNEHAL in whichever container you are calling this , set the zIndex of the container to 1 or anything less that what you gave down
 //remeber give zindex directly to the container
 
-const noneChar = "None"
+const noneChar = "none"
 export default class DialogListBox extends Component {
     constructor(props) {
       super(props);
@@ -23,7 +23,6 @@ export default class DialogListBox extends Component {
           dTitle:"",
           dData:[],
           boxNum:0,
-          boxText:""
       };
       this.state.time = new Animated.Value(0);
       this.state.opacity = this.state.time.interpolate({
@@ -43,7 +42,6 @@ export default class DialogListBox extends Component {
   }
   animateButtonPressed = (data,boxNum) => {
             var {dTitle , dData}=data;
-            dData.push(noneChar);
             this.setState({
                 dTitle:dTitle,
                 dData:dData,
@@ -65,7 +63,6 @@ export default class DialogListBox extends Component {
           dTitle:"",
           dData:[],
           boxNum:0,
-          boxText:""
       }));
   }
     listItemPressed = (item) => {
@@ -117,7 +114,7 @@ const dialogStyles = StyleSheet.create({
   dialogListBackground:{
       height:'100%',
       width:'100%',
-      backgroundColor:'rgba(52, 52, 52,0.8)',
+      backgroundColor:'rgba(52, 52, 52,0.5)',
       position:'absolute',
       justifyContent:'center',
       alignItems:'center',

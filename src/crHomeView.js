@@ -13,15 +13,15 @@ import {
   Alert
 } from 'react-native';
 import DialogListBox from './components/dialogListBox.js';
-const content = {
+let content = {
     first:['Theory','Lab'],
     second:{
-        t:['1 hr','2 hr'],
-        l:['B1','B2','B3'],
+        Theory:['1 hr','2 hr'],
+        Lab:['B1','B2','B3'],
     },
     third:{
-        t:['DWDM','CO','OS','M2','DWDM','CO'],
-        l:['DWDM Lab','OS Lab','EWS Lab']
+        Theory:['DWDM','CO','OS','M2','DWDM','CO'],
+        Lab:['DWDM Lab','OS Lab','EWS Lab']
     }
 };
 export default class CrHome extends Component {
@@ -37,16 +37,44 @@ export default class CrHome extends Component {
 
     }
     setSubjectForSubBox=(boxNum,subText) => {
-        this.setState({
-           ['sub'+boxNum]:subText
-        });
+        if(boxNum!=1)
+            this.setState({
+               ['sub'+boxNum]:subText
+            });
+        else
+            this.setState({
+                sub1:subText,
+                sub2:"",
+                sub3:""
+            });
     }
     subBoxesPressed = (boxNum) => {
-        var data = {
-            dTitle:'Choose',
-            dData:['Theory','Lab']
-        };
-        this._objc.animateButtonPressed(data,boxNum);
+        var data={};
+        if(boxNum!=1 && this.state.sub1==""){
+            Alert.alert("Fill the first field");
+        }
+        else{
+            data = {dTitle:'Choose'};
+            switch (boxNum) {
+                case 1:
+                    data["dData"]=content.first;
+                    break;
+                case 2:
+                    data["dData"]=this.state.sub1=="Theory"?content.second.Theory:content.second.Lab;
+                    break;
+                case 3:
+                    data["dData"]=this.state.sub1=="Theory"?content.third.Theory:content.third.Lab;
+                    break;
+            }
+            this._objc.animateButtonPressed(data,boxNum);
+        }
+    }
+    nextButtonPressed = () => {
+        if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
+            Alert.alert('Fill all fields')
+        else {
+            Alert.alert('Transition to next view')
+        }
     }
   render() {
     return (
@@ -97,7 +125,7 @@ export default class CrHome extends Component {
                 </View>
             </View>
             <View style={styles.b2} >
-            <TouchableOpacity onPress = {()=>alert('nextPressed')} activeOpacity={1}>
+            <TouchableOpacity onPress = {this.nextButtonPressed} activeOpacity={1}>
                     <Text style={styles.nextButton}>Next</Text>
             </TouchableOpacity>
             </View>
@@ -191,7 +219,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     arrow:{
-        left:40,
+        left:45,
         fontSize:Platform.OS=='ios'?20:35,
         marginTop:Platform.OS=='ios'?10:-7,
         marginBottom:Platform.OS=='ios'?8:1,
