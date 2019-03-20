@@ -91,11 +91,11 @@ export default class CrHome extends Component {
                         <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
                     </View>
                     <View style={styles.b1b1Dynamic}>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>ID</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Date</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Class</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Day</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>ID</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Date</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Class</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Day</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
                     </View>
                 </View>
                 <View style={styles.b1bSub} >
