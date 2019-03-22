@@ -30,7 +30,6 @@ const Row = () => {
 
 const styles = StyleSheet.create({
     container: {
-      marginTop:Platform.OS=="ios"?22:0,
       flex: 1,
       backgroundColor:'lightblue'
   },

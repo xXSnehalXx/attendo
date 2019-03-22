@@ -28,26 +28,13 @@ let data = {
         "15841A05L3",
     ]
 }
-export default class AttSelView extends Component {
+export default class AbsentView extends Component {
     constructor(props){
         super(props);
         var rolls = data.rolls
-        //modify the below attendance for making the attednace to remain if users goes to
-        //next view and comes back , if not modified the changes will fuckk off
-        var attendance= rolls.map((value,index,ob)=>1);
         this.state={
             rolls:rolls,
-            attendance:attendance
         };
-    }
-
-    changeAttendance = (roll) => {
-        var index = this.state.rolls.indexOf(roll)
-        var att = Object.assign([],this.state.attendance)
-        att[index]=att[index]==1?0:1;
-        this.setState({
-            attendance:att
-        });
     }
 
   render() {
@@ -55,8 +42,8 @@ export default class AttSelView extends Component {
       <View style={styles.container}>
         <FlatList
             data={this.state.rolls}
-            extraData={this.state}
-            renderItem={({item,index}) =><EachRollCell tex={item} select = {this.state.attendance[index]} changeAttendance={this.changeAttendance} />}
+            extraData={this.state} /*this shit is important for comments*/
+            renderItem={({item,index}) =><EachRollCell tex={item}/>}
             keyExtractor={(item,index)=>index.toString()}
             bounces={false}
         />
@@ -71,14 +58,9 @@ class EachRollCell extends Component {
     render(){
         return(
       <View style={styles.EachRollCell}>
-        <TouchableHighlight style={{flex:1}} onPress={() => {
-            this.props.changeAttendance(this.props.tex)
-        }} underlayColor={"rgba(52,52,52,0.1)"} >
             <View style={styles.cellContainer}>
                 <View style={styles.rollnumCell}><Text style={styles.text}>{this.props.tex}</Text></View>
-                <View style={styles.tickCell}><Text style={styles.tick}>{this.props.select==1 ? "✓":""}</Text></View>
             </View>
-        </TouchableHighlight>
       </View>
   );
 }
@@ -94,21 +76,20 @@ const styles = StyleSheet.create({
   EachRollCell:{
       height:54,
       backgroundColor:'white',
-      margin:0.5,
 
   },
   cellContainer:{
          flex:1,
       flexDirection:'row',
-      justifyContent:'space-between',
+      justifyContent:'center'
   },
   rollnumCell:{
       width:200,
       margin:1,
-      justifyContent:'center'
+      justifyContent:'center',
+      alignItems:'center'
   },
   tickCell:{
-      width:55,
       margin:1,
       // backgroundColor:'blue',
       marginRight:15,

@@ -70,11 +70,12 @@ export default class CrHome extends Component {
         }
     }
     nextButtonPressed = () => {
-        if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
-            Alert.alert('Fill all fields')
-        else {
-            Alert.alert('Transition to next view')
-        }
+        // if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
+        //     Alert.alert('Fill all fields')
+        // else {
+        //     Alert.alert('Transition to next view')
+        // }
+        this.props.navigation.navigate('AttSelView');
     }
   render() {
     return (
@@ -91,11 +92,11 @@ export default class CrHome extends Component {
                         <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
                     </View>
                     <View style={styles.b1b1Dynamic}>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>ID</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Date</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Class</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Day</Text></View>
-                    <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>ID</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Date</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Class</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Day</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
                     </View>
                 </View>
                 <View style={styles.b1bSub} >
@@ -138,7 +139,6 @@ export default class CrHome extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      marginTop:Platform.OS=="ios"?22:0,
       flex: 1,
       // backgroundColor: '#C7DEED',
       zIndex:1
