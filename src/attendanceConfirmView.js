@@ -5,7 +5,8 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native';
 
 export default class AttConfView extends Component {
@@ -27,11 +28,15 @@ export default class AttConfView extends Component {
                 <View style={styles.b1bb}><Text style={styles.t1}>CSE4D</Text></View>
                 <View style={styles.b1bb}><Text style={styles.t1}>55</Text></View>
                 <View style={styles.b1bb}><Text style={styles.t1}>5</Text></View>
-                <View style={styles.b1bb}><Text style={[styles.t1,{color:"lightblue"}]}>Check</Text></View>
+                <TouchableOpacity style={{flex:1}} onPress={()=>this.props.navigation.navigate('AbsentView')} activeOpacity={0.8}>
+                    <View style={styles.b1bb}><Text style={[styles.t1,{color:"lightblue"}]}>Check</Text></View>
+                </TouchableOpacity>
             </View>
         </View>
         <View style={styles.b2}>
-            <View style={styles.nextButton}><Text style={[styles.buttText,{color:"lightblue"}]}>Next</Text></View>
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate('FacCodeView')} activeOpacity={1}>
+                <View style={styles.nextButton}><Text style={[styles.buttText,{color:"lightblue"}]}>Next</Text></View>
+            </TouchableOpacity>
         </View>
       </View>
     );
@@ -40,7 +45,6 @@ export default class AttConfView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      marginTop:Platform.OS=="ios"?22:0,
       flex: 1,
       backgroundColor:'white'
     },

@@ -70,11 +70,12 @@ export default class CrHome extends Component {
         }
     }
     nextButtonPressed = () => {
-        if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
-            Alert.alert('Fill all fields')
-        else {
-            Alert.alert('Transition to next view')
-        }
+        // if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
+        //     Alert.alert('Fill all fields')
+        // else {
+        //     Alert.alert('Transition to next view')
+        // }
+        this.props.navigation.navigate('AttSelView');
     }
   render() {
     return (
@@ -138,7 +139,6 @@ export default class CrHome extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      marginTop:Platform.OS=="ios"?22:0,
       flex: 1,
       // backgroundColor: '#C7DEED',
       zIndex:1

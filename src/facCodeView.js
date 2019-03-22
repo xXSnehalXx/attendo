@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Platform,
   TextInput,
+  TouchableOpacity
 } from 'react-native';
 
 export default class FacCodeView extends Component {
@@ -34,9 +35,14 @@ export default class FacCodeView extends Component {
                 </View>
             </View>
             <View style={styles.row}>
-                <View><Text style={[styles.buttText,{color:"blue"}]}>Cancel</Text></View>
-                <View><Text style={[styles.buttText,{color:"blue"}]}>Submit</Text></View>
+            <TouchableOpacity onPress={()=>this.props.navigation.goBack()} activeOpacity={0.8}>
+                <View style={styles.buttTextContainer}><Text style={[styles.buttText,{color:"blue"}]}>Cancel</Text></View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>this.props.navigation.popToTop()} activeOpacity={0.8}>
+                <View style={styles.buttTextContainer}><Text style={[styles.buttText,{color:"blue"}]}>Submit</Text></View>
+            </TouchableOpacity>
             </View>
+            <View style={styles.row}></View>
             <View style={styles.row}></View>
         </View>
       </View>
@@ -46,7 +52,6 @@ export default class FacCodeView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-          marginTop:Platform.OS=="ios"?22:0,
           flex: 1,
           backgroundColor: '#C7DEED',
           justifyContent:'center'
@@ -74,6 +79,6 @@ const styles = StyleSheet.create({
           borderWidth:1,
           paddingLeft:10,
           borderRadius:7
-      }
+      },
 
 });

@@ -39,12 +39,22 @@ export default class Login extends Component {
     }
 
     loginButtonPressed = () => {
-
+            Platform.OS=="ios"?
                 Alert.alert(
           'Login as',
           '',
           [
-            {text: 'Student', onPress: () => console.log('Ask me later pressed')},
+            {text: 'Student', onPress: () => this.props.navigation.navigate('CrHome')},
+            {text: 'Faculty', onPress: () => console.log('OK Pressed')},
+          ],
+          {cancelable: false},
+        )
+        :
+        Alert.alert(
+          'Login as',
+          '',
+          [
+            {text: 'Student', onPress: () => this.props.navigation.navigate('CrHome')},
             {
               text: '',
               onPress: () => {},
@@ -52,7 +62,7 @@ export default class Login extends Component {
             {text: 'Faculty', onPress: () => console.log('OK Pressed')},
           ],
           {cancelable: false},
-        );
+        )
     }
 
   render() {
@@ -117,7 +127,6 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:Platform.OS=="ios"?22:0,
     flex: 1,
     backgroundColor: '#C7DEED',
     },
