@@ -14,33 +14,71 @@ let data = {
         "15841A05J9",
         "15841A05K0",
         "15841A05K1",
-        "15841A05K2",
-        "15841A05K3",
-        "15841A05K4",
-        "15841A05K5",
-        "15841A05K6",
-        "15841A05K7",
-        "15841A05K8",
-        "15841A05K9",
-        "15841A05L0",
-        "15841A05L1",
-        "15841A05L2",
-        "15841A05L3",
     ]
 }
 export default class AttSelView extends Component {
+
+    componentWillMount(){
+        this.props.bullRef(this);
+    }
+    componentWillUnmount(){
+        this.props.bullRef(undefined);
+    }
     constructor(props){
         super(props);
-        var rolls = data.rolls
+        const {navigation}=props;
+        var rolls = navigation.getParam('rolls',data.rolls);
+        var date = navigation.getParam('date',"..");
+        var subject = navigation.getParam('subject',"..");
+        var bys = navigation.getParam('bys',"..");
+        var id = navigation.getParam('id',"..");
+        var n = navigation.getParam('n',"..");
+
         //modify the below attendance for making the attednace to remain if users goes to
         //next view and comes back , if not modified the changes will fuckk off
         var attendance= rolls.map((value,index,ob)=>1);
         this.state={
             rolls:rolls,
-            attendance:attendance
+            attendance:attendance,
+            date:date,
+            subject:subject,
+            bys:bys,
+            unchangedAttendance:attendance,
+            id:id,
+            n:n,
+            goBackFromSelViewKey:navigation.state.key
         };
     }
+    nextButtonPressed=() => {
+        var att = this.state.attendance;
+        var rolls = this.state.rolls;
+        var absentees=[];
+        var p=0;
+        var a=0;
 
+        att.forEach((value,index,ob) => {
+            if(value==1)
+                p++;
+            else {
+                a++;
+                absentees.push(rolls[index]);
+            }
+        })
+
+        var dataObject = {
+            absCount:a,
+            presCount:p,
+            absentRolls:absentees,
+            date:this.state.date,
+            subject:this.state.subject,
+            bys:this.state.bys,
+            id:this.state.id,
+            attendance:att,
+            n:this.state.n,
+            goBackFromSelViewKey:this.state.goBackFromSelViewKey
+        }
+        return dataObject;
+    }
     changeAttendance = (roll) => {
         var index = this.state.rolls.indexOf(roll)
         var att = Object.assign([],this.state.attendance)

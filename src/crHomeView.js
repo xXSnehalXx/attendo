@@ -12,6 +12,7 @@ import {
   FlatList,
   Alert
 } from 'react-native';
+const axios = require('axios');
 import DialogListBox from './components/dialogListBox.js';
 let content = {
     first:['Theory','Lab'],
@@ -28,13 +29,102 @@ export default class CrHome extends Component {
     constructor(props){
         super(props);
         this.child={};
+        const { navigation } = props;
         this.state={
             sub1:"",
             sub2:"",
-            sub3:""
+            sub3:"",
+            first:['Theory','Lab'],
+            second:{
+                Theory:['1 hr','2 hr'],
+                Lab:['B1','B2','B3'],
+            },
+            subT:[],
+            subL:[],
+            rolls:[],
+            rollsBatch:[],
+            date:navigation.getParam('date','...'),
+            day:navigation.getParam('day','...'),
+            id:navigation.getParam('id','...'),
+            sem:navigation.getParam('sem','...'),
+            bys:`${navigation.getParam('branch','.')}${navigation.getParam('year','...')}${navigation.getParam('section','...')}`,
+            branch:navigation.getParam('branch','...'),
+            year:navigation.getParam('year','...'),
+            section:navigation.getParam('section','...'),
         };
         this._objc = null;
+        this.getRollsInfo();
 
+    }
+    getRollsInfo=() => {
+          var self = this
+          var rolls=[]
+          var rollsBatch = []
+          var bys =this.state.bys;
+          const params = new URLSearchParams();
+          params.append('bys', bys);
+          axios({
+              method:"post",
+              url:"http://atriams.xyz/ios/rollsBatchToCr.php",
+              data:params
+              })
+        .then(function (response) {
+          var data = response.data
+          // console.log(data);
+          data.forEach((value,index,ob) => {
+              if(value[bys]!=""){
+                  rolls.push(value[bys]);
+                  rollsBatch.push(value[`${bys}b`])
+              }
+          })
+          console.log(rolls,rollsBatch);
+          self.setState({
+              rolls:rolls,
+              rollsBatch:rollsBatch
+          });
+          self.getSubsInfo();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    getSubsInfo=() => {
+        var self = this
+        var subT=[]
+        var subL = []
+        var year = this.state.year;
+        var sem = this.state.sem;
+        var branch = this.state.branch;
+        var bys = branch+year+"-"+sem;
+        var bysl = branch+year+"-"+sem+'l';
+        const params = new URLSearchParams();
+        params.append('year', year);
+        params.append('branch', branch);
+        params.append('sem', sem);
+        axios({
+            method:"post",
+            url:"http://atriams.xyz/ios/getTimeTable.php",
+            data:params
+            })
+      .then(function (response) {
+        var data = response.data
+        data.forEach((value,index,ob)=>{
+
+            if(value[bys]!="")
+                subT.push(value[bys])
+            if(value[bysl]!="")
+                subL.push(value[bysl])
+        })
+        self.setState({
+            subT:subT,
+            subL:subL
+        });
+        // console.log(subT,subL);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
     setSubjectForSubBox=(boxNum,subText) => {
         if(boxNum!=1)
@@ -57,27 +147,45 @@ export default class CrHome extends Component {
             data = {dTitle:'Choose'};
             switch (boxNum) {
                 case 1:
-                    data["dData"]=content.first;
+                    data["dData"]=this.state.first;
                     break;
                 case 2:
-                    data["dData"]=this.state.sub1=="Theory"?content.second.Theory:content.second.Lab;
+                    data["dData"]=this.state.sub1=="Theory"?this.state.second.Theory:this.state.second.Lab;
                     break;
                 case 3:
-                    data["dData"]=this.state.sub1=="Theory"?content.third.Theory:content.third.Lab;
+                    data["dData"]=this.state.sub1=="Theory"?this.state.subT:this.state.subL;
                     break;
             }
             this._objc.animateButtonPressed(data,boxNum);
         }
     }
+
     nextButtonPressed = () => {
-        // if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
-        //     Alert.alert('Fill all fields')
-        // else {
-        //     Alert.alert('Transition to next view')
-        // }
-        this.props.navigation.navigate('AttSelView');
+        if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
+            Alert.alert('Fill all fields')
+        else {
+            var n = 0;
+            if(this.state.sub2=="1 hr")
+                n=1;
+            else if(this.state.sub2=="2 hr")
+                n=2;
+            else
+                n=3;
+
+            this.props.navigation.navigate('AttSelView',{
+                rolls:this.state.rolls,
+                date:this.state.date,
+                subject:this.state.sub3,
+                bys:this.state.bys,
+                id:this.state.id,
+                n:n
+            });
+        }
+
+
     }
   render() {
+      var s = this.state;
     return (
       <View style={styles.container}>
       <DialogListBox bullRef = {(ref) => this._objc = ref} setSub = {this.setSubjectForSubBox} />
@@ -92,11 +200,11 @@ export default class CrHome extends Component {
                         <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
                     </View>
                     <View style={styles.b1b1Dynamic}>
-                        <View style={styles.b1b1b}><Text style={styles.t1}>ID</Text></View>
-                        <View style={styles.b1b1b}><Text style={styles.t1}>Date</Text></View>
-                        <View style={styles.b1b1b}><Text style={styles.t1}>Class</Text></View>
-                        <View style={styles.b1b1b}><Text style={styles.t1}>Day</Text></View>
-                        <View style={styles.b1b1b}><Text style={styles.t1}>Sem</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>{s.id}</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>{s.date}</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>{s.bys}</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>{s.day}</Text></View>
+                        <View style={styles.b1b1b}><Text style={styles.t1}>{s.sem}</Text></View>
                     </View>
                 </View>
                 <View style={styles.b1bSub} >

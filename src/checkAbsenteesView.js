@@ -14,24 +14,13 @@ let data = {
         "15841A05J9",
         "15841A05K0",
         "15841A05K1",
-        "15841A05K2",
-        "15841A05K3",
-        "15841A05K4",
-        "15841A05K5",
-        "15841A05K6",
-        "15841A05K7",
-        "15841A05K8",
-        "15841A05K9",
-        "15841A05L0",
-        "15841A05L1",
-        "15841A05L2",
-        "15841A05L3",
     ]
 }
 export default class AbsentView extends Component {
     constructor(props){
         super(props);
-        var rolls = data.rolls
+        const {navigation}=props;
+        var rolls = navigation.getParam('rolls',data.rolls);
         this.state={
             rolls:rolls,
         };
@@ -71,7 +60,7 @@ class EachRollCell extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor:'rgba(52, 52, 52,0.5)'
+      backgroundColor:'white'
   },
   EachRollCell:{
       height:54,

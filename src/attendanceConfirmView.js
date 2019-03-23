@@ -10,11 +10,49 @@ import {
 } from 'react-native';
 
 export default class AttConfView extends Component {
+
+    constructor(props){
+        super(props);
+        const {navigation} = props;
+        var data = navigation.getParam("data",{});
+        this.state={
+            absCount:data.absCount,
+            presCount:data.presCount,
+            absentRolls:data.absentRolls,
+            date:data.date,
+            subject:data.subject,
+            bys:data.bys,
+            id:data.id,
+            attendance:data.attendance,
+            n:data.n,
+            goBackFromSelViewKey:data.goBackFromSelViewKey
+        };
+    }
+
+    segueToAbsenteesView=()=>{
+        if(this.state.absCount!=0)
+            this.props.navigation.navigate('AbsentView',{
+                rolls:this.state.absentRolls
+                })
+    }
+    segueToFacCodeView=()=>{
+        var x = this.state;
+        this.props.navigation.navigate('FacCodeView',{
+            date:x.date,
+            subject:x.subject,
+            attendance:x.attendance,
+            id:x.id,
+            bys:x.bys,
+            n:x.n,
+            goBackFromSelViewKey:x.goBackFromSelViewKey
+            });
+    }
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.b1}>
             <View style={styles.b1b}>
+                <View style={styles.b1bb}><Text style={styles.t1}>ID</Text></View>
                 <View style={styles.b1bb}><Text style={styles.t1}>Date</Text></View>
                 <View style={styles.b1bb}><Text style={styles.t1}>Period</Text></View>
                 <View style={styles.b1bb}><Text style={styles.t1}>Class</Text></View>
@@ -23,18 +61,19 @@ export default class AttConfView extends Component {
                 <View style={styles.b1bb}><Text style={styles.t1}>Check Absentees</Text></View>
             </View>
             <View style={styles.b1b}>
-                <View style={styles.b1bb}><Text style={styles.t1}>20-03-19</Text></View>
-                <View style={styles.b1bb}><Text style={styles.t1}>DWDM</Text></View>
-                <View style={styles.b1bb}><Text style={styles.t1}>CSE4D</Text></View>
-                <View style={styles.b1bb}><Text style={styles.t1}>55</Text></View>
-                <View style={styles.b1bb}><Text style={styles.t1}>5</Text></View>
-                <TouchableOpacity style={{flex:1}} onPress={()=>this.props.navigation.navigate('AbsentView')} activeOpacity={0.8}>
+                <View style={styles.b1bb}><Text style={styles.t1}>{this.state.id}</Text></View>
+                <View style={styles.b1bb}><Text style={styles.t1}>{this.state.date}</Text></View>
+                <View style={styles.b1bb}><Text style={styles.t1}>{this.state.subject}</Text></View>
+                <View style={styles.b1bb}><Text style={styles.t1}>{this.state.bys}</Text></View>
+                <View style={styles.b1bb}><Text style={styles.t1}>{this.state.presCount}</Text></View>
+                <View style={styles.b1bb}><Text style={styles.t1}>{this.state.absCount}</Text></View>
+                <TouchableOpacity style={{flex:1}} onPress={this.segueToAbsenteesView} activeOpacity={0.8}>
                     <View style={styles.b1bb}><Text style={[styles.t1,{color:"lightblue"}]}>Check</Text></View>
                 </TouchableOpacity>
             </View>
         </View>
         <View style={styles.b2}>
-            <TouchableOpacity onPress={()=>this.props.navigation.navigate('FacCodeView')} activeOpacity={1}>
+            <TouchableOpacity onPress={this.segueToFacCodeView} activeOpacity={1}>
                 <View style={styles.nextButton}><Text style={[styles.buttText,{color:"lightblue"}]}>Next</Text></View>
             </TouchableOpacity>
         </View>

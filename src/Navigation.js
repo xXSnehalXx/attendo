@@ -15,7 +15,7 @@
  import FacCodeView from './facCodeView.js';
  import AbsentView from './checkAbsenteesView.js'
 import React , {Component} from "react";
-import { View, Text ,Button , Platform ,Image,TouchableOpacity} from "react-native";
+import { View, Text ,Button , Platform ,Image,TouchableOpacity,Alert} from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 class LoginScreen extends Component {
@@ -38,18 +38,37 @@ class CrHomeScreen extends Component {
 }
 
 class AttSelViewScreen extends Component {
-    static navigationOptions = ({navigation}) => {
-        return {
-            headerRight: (
-              <TouchableOpacity onPress={()=>navigation.navigate('AttConfView')} activeOpacity={1}>
-                  <View style={{marginRight:20}}><Text style={{fontSize:17,color:"white"}}>Next</Text></View>
-              </TouchableOpacity>
-            ),
-        };
+    static navigationOptions = ({navigation, screenProps}) => {
+      const params = navigation.state.params || {};
+      return {
+        headerRight: params.headerRight,
+      }
+    }
 
-};
+    _setNavigationParams() {
+            let headerRight = <TouchableOpacity onPress={this.nextButtonPressed} activeOpacity={1}>
+                                <View style={{marginRight:20}}><Text style={{fontSize:17,color:"white"}}>Next</Text></View>
+                              </TouchableOpacity>;
+
+      this.props.navigation.setParams({
+        headerRight,
+      });
+    }
+    componentWillMount() {
+      this._setNavigationParams();
+    }
+    constructor(props){
+        super(props);
+        this.child={};
+    }
+    nextButtonPressed=() => {
+        var dataObject = this.child.nextButtonPressed();
+        this.props.navigation.navigate('AttConfView',{
+            data:dataObject
+        });
+    }
     render(){
-        return (<AttSelView navigation = {this.props.navigation}/>);
+        return (<AttSelView bullRef={(ref)=> this.child=ref } navigation = {this.props.navigation}/>);
     }
 }
 

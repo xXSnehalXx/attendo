@@ -16,9 +16,9 @@ import {
   TextInput,
   TouchableHighlight,
   Alert,
-  Picker
+  Picker,
 } from 'react-native';
-
+const axios = require('axios');
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
     'Cmd+D or shake for dev menu',
@@ -37,14 +37,52 @@ export default class Login extends Component {
         }
 
     }
-
+    studentButtonPressed=()=>{
+        var uname = this.state.loginText;
+        var pass = this.state.passwordText;
+        pass = pass.trim();
+        const self = this;
+        const params = new URLSearchParams();
+        params.append('id', uname);
+        params.append('pass', pass);
+        params.append('type', "0");
+        axios({
+            method:"post",
+            url:"http://atriams.xyz/ios/login.php",
+            data:params
+            })
+      .then(function (response) {
+        var data = response.data
+        console.log(data)
+        if(data.secret=="XoReTu"){
+            self.props.navigation.navigate('CrHome',{
+                branch:data.branch,
+                date:data.date,
+                day:data.day,
+                id:data.id,
+                section:data.section,
+                sem:data.sem,
+                year:data.year
+            })
+        }else{
+            Alert.alert("Unsuccessful")
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
     loginButtonPressed = () => {
+
+        if((this.state.loginText=="")||(this.state.passwordText=="")){
+            Alert.alert("Fill all field");
+        }else{
             Platform.OS=="ios"?
                 Alert.alert(
           'Login as',
           '',
           [
-            {text: 'Student', onPress: () => this.props.navigation.navigate('CrHome')},
+            {text: 'Student', onPress: () => this.studentButtonPressed()},
             {text: 'Faculty', onPress: () => console.log('OK Pressed')},
           ],
           {cancelable: false},
@@ -54,7 +92,7 @@ export default class Login extends Component {
           'Login as',
           '',
           [
-            {text: 'Student', onPress: () => this.props.navigation.navigate('CrHome')},
+            {text: 'Student', onPress: () => this.studentButtonPressed()},
             {
               text: '',
               onPress: () => {},
@@ -63,6 +101,7 @@ export default class Login extends Component {
           ],
           {cancelable: false},
         )
+    }
     }
 
   render() {
@@ -101,7 +140,7 @@ export default class Login extends Component {
                 </View>
                 <View style={styles.b1b2b}>
 
-                    <TouchableHighlight onPress = {this.loginButtonPressed} underlayColor={"#CCCCCC"} activeOpacity={0.5}>
+                    <TouchableHighlight onPress = {this.loginButtonPressed} underlayColor={"#C7DEED"} activeOpacity={0.5}>
                         <Text style={styles.otherText}>Login</Text>
                     </TouchableHighlight>
                 </View>
