@@ -25,6 +25,7 @@ let content = {
         Lab:['DWDM Lab','OS Lab','EWS Lab']
     }
 };
+
 export default class CrHome extends Component {
     constructor(props){
         super(props);
@@ -57,7 +58,7 @@ export default class CrHome extends Component {
 
     }
     getRollsInfo=() => {
-          var self = this
+          var self = this;
           var rolls=[]
           var rollsBatch = []
           var bys =this.state.bys;
@@ -164,6 +165,7 @@ export default class CrHome extends Component {
         if((this.state.sub1=="")||(this.state.sub2=="")||(this.state.sub3==""))
             Alert.alert('Fill all fields')
         else {
+            //below code is for n
             var n = 0;
             if(this.state.sub2=="1 hr")
                 n=1;
@@ -171,14 +173,30 @@ export default class CrHome extends Component {
                 n=2;
             else
                 n=3;
+            //below code is for rolls , if its theory send whole rolls , if its Lab then send required batches
+            var rolls = [];
+
+            var rollsBatch = this.state.rollsBatch;
+            if(this.state.sub1=="Theory"){
+                rolls = this.state.rolls;
+            }
+            else{
+                var batch = this.state.sub2.substring(1,2);
+                rollsBatch.forEach((value,index,ob)=>{
+                    if(value==batch)
+                        rolls.push(this.state.rolls[index]);
+                    });
+            }
+
 
             this.props.navigation.navigate('AttSelView',{
-                rolls:this.state.rolls,
+                rolls:rolls,
                 date:this.state.date,
                 subject:this.state.sub3,
                 bys:this.state.bys,
                 id:this.state.id,
-                n:n
+                n:n,
+                totalRolls:this.state.rolls
             });
         }
 
@@ -243,12 +261,12 @@ export default class CrHome extends Component {
     );
   }
 }
-
+//TODO: make some ui changes
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      // backgroundColor: '#C7DEED',
+    //   backgroundColor: '',
       zIndex:1
   },
     b:{
@@ -333,5 +351,5 @@ const styles = StyleSheet.create({
         marginBottom:Platform.OS=='ios'?8:1,
         color:'black'
     },
-    //below is for the diallogLISt
+    //below is for the dialogList
 });
