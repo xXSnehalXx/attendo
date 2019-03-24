@@ -27,11 +27,7 @@ import {
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 class LoginScreen extends Component {
-  static navigationOptions = {};
-  segueToRegister = () => {
-    // this.props.navigation.navigate("Register1");
-    Alert.alert("BEEYAACH");
-  };
+
   render() {
     return <Login navigation={this.props.navigation} />;
   }
@@ -69,7 +65,6 @@ class AttSelViewScreen extends Component {
   }
   constructor(props) {
     super(props);
-    this.child = {};
   }
   nextButtonPressed = () => {
     var dataObject = this.child.nextButtonPressed();

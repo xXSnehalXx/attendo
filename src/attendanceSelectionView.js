@@ -9,6 +9,7 @@ import {
   FlatList,
   TouchableHighlight
 } from "react-native";
+import PropTypes from 'prop-types'; // ES6
 let data = {
   rolls: [
     "15841A05J9",
@@ -22,7 +23,7 @@ let data = {
     "15841A05K7"
   ]
 };
-export default class AttSelView extends Component {
+export default class AttSelView extends Component <Props>{
   // componentWillMount(){
   //     this.props.bullRef(this);
   // }
@@ -144,6 +145,10 @@ class EachRollCell extends Component {
       </View>
     );
   }
+}
+
+AttSelView.PropTypes={
+  navigation: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
